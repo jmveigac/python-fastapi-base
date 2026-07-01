@@ -31,6 +31,7 @@ class PizzaService:
         if pizza_delete:
             PizzaService.pizzas.remove(pizza_delete)
             return True
+        return False
 
     @staticmethod
     def update(updated_pizza):
@@ -38,7 +39,7 @@ class PizzaService:
             (
                 i
                 for i, pizza in enumerate(PizzaService.pizzas)
-                if pizza.pizza_id == updated_pizza.id
+                if pizza.pizza_id == updated_pizza.pizza_id
             ),
             -1,
         )

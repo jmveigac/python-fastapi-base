@@ -18,7 +18,9 @@ class PizzaService:
         return list(self._pizzas)
 
     def get(self, pizza_id: int) -> Pizza | None:
-        return next((pizza for pizza in self._pizzas if pizza.pizza_id == pizza_id), None)
+        return next(
+            (pizza for pizza in self._pizzas if pizza.pizza_id == pizza_id), None
+        )
 
     def add(self, pizza_input: PizzaCreate) -> Pizza:
         pizza = Pizza(pizza_id=self._next_id, **pizza_input.model_dump())

@@ -5,6 +5,10 @@ venv/
 .vscode/
 .idea/
 .cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 dist/
 build/
 fastapi_base/

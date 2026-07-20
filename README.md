@@ -48,6 +48,6 @@ Install the development dependencies and run the same checks used by CI:
 pip install -r requirements-dev.txt
 ruff check .
 ruff format --check .
-pytest -q
+python -m pytest -q
 python -m compileall -q main.py models services
 ```

@@ -1,49 +1,41 @@
-from models.pizza import Pizza
+from collections.abc import Iterable
+
+from models.pizza import Pizza, PizzaCreate
+
+
+DEFAULT_PIZZAS = (
+    Pizza(pizza_id=1, name="Classic Italian", is_gluten_free=False),
+    Pizza(pizza_id=2, name="Veggie", is_gluten_free=True),
+)
 
 
 class PizzaService:
-    pizzas = [
-        Pizza(pizza_id=1, name="Classic Italian", is_gluten_free=False),
-        Pizza(pizza_id=2, name="Veggie", is_gluten_free=True),
-    ]
-    next_id = 3
+    def __init__(self, pizzas: Iterable[Pizza] | None = None) -> None:
+        self._pizzas = list(DEFAULT_PIZZAS if pizzas is None else pizzas)
+        self._next_id = max((pizza.pizza_id for pizza in self._pizzas), default=0) + 1
 
-    @staticmethod
-    def get_all():
-        return PizzaService.pizzas
+    def get_all(self) -> list[Pizza]:
+        return list(self._pizzas)
 
-    @staticmethod
-    def get(pizza_id):
-        return next(
-            (pizza for pizza in PizzaService.pizzas if pizza.pizza_id == pizza_id), None
-        )
+    def get(self, pizza_id: int) -> Pizza | None:
+        return next((pizza for pizza in self._pizzas if pizza.pizza_id == pizza_id), None)
 
-    @staticmethod
-    def add(pizza_input):
-        pizza_input.pizza_id = PizzaService.next_id
-        PizzaService.next_id += 1
-        PizzaService.pizzas.append(pizza_input)
-        return pizza_input
+    def add(self, pizza_input: PizzaCreate) -> Pizza:
+        pizza = Pizza(pizza_id=self._next_id, **pizza_input.model_dump())
+        self._next_id += 1
+        self._pizzas.append(pizza)
+        return pizza
 
-    @staticmethod
-    def delete(pizza_id):
-        pizza_delete = PizzaService.get(pizza_id)
-        if pizza_delete:
-            PizzaService.pizzas.remove(pizza_delete)
-            return True
+    def delete(self, pizza_id: int) -> bool:
+        for index, pizza in enumerate(self._pizzas):
+            if pizza.pizza_id == pizza_id:
+                del self._pizzas[index]
+                return True
         return False
 
-    @staticmethod
-    def update(updated_pizza):
-        index = next(
-            (
-                i
-                for i, pizza in enumerate(PizzaService.pizzas)
-                if pizza.pizza_id == updated_pizza.pizza_id
-            ),
-            -1,
-        )
-        if index != -1:
-            PizzaService.pizzas[index] = updated_pizza
-            return True
+    def update(self, updated_pizza: Pizza) -> bool:
+        for index, pizza in enumerate(self._pizzas):
+            if pizza.pizza_id == updated_pizza.pizza_id:
+                self._pizzas[index] = updated_pizza
+                return True
         return False

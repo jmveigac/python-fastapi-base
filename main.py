@@ -16,7 +16,9 @@ def create_app(service: PizzaService | None = None) -> FastAPI:
     async def get(pizza_id: int) -> Pizza:
         pizza = pizza_service.get(pizza_id)
         if pizza is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found.")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Not Found."
+            )
         return pizza
 
     @app.post("/", response_model=Pizza, status_code=status.HTTP_201_CREATED)

@@ -1,2 +1,2 @@
-fastapi[standard-no-fastapi-cloud-cli]==0.139.2
+fastapi[standard-no-fastapi-cloud-cli]==0.141.1
 pydantic==2.13.4
